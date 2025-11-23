@@ -1,0 +1,240 @@
+/* Auth Page Styles */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(60deg, rgb(0, 0, 0), rgb(38, 38, 39), rgb(131, 131, 131));
+    padding: 30px;
+    font-family: var(--font-lato);
+    /* Using Lato as per project theme */
+}
+
+
+.flip-container {
+    position: relative;
+    max-width: 850px;
+    width: 100%;
+    background: #fff;
+    padding: 40px 30px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    perspective: 2700px;
+    min-height: 500px;
+    /* Ensure height for the cover */
+    display: flex;
+}
+
+.cover {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 50%;
+    z-index: 98;
+    transition: all 1s ease;
+    transform-origin: left;
+    transform-style: preserve-3d;
+}
+
+.flip-container.flipped .cover {
+    transform: rotateY(-180deg);
+}
+
+.cover .front,
+.cover .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    backface-visibility: hidden;
+}
+
+.cover .back {
+    transform: rotateY(180deg);
+}
+
+.cover::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+
+.cover::after {
+    opacity: 0.5;
+    transform: rotateY(180deg);
+}
+
+.cover-img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    z-index: 12;
+}
+
+.cover .text {
+    position: absolute;
+    z-index: 130;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.cover .back .text {
+    transform: rotateY(180deg);
+}
+
+.text-1,
+.text-2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #cae962;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
+}
+
+.text-2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.forms-container {
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    display: flex;
+}
+
+.form-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.login-form,
+.signup-form {
+    width: calc(100% / 2 - 25px);
+}
+
+.title {
+    position: relative;
+    font-size: 24px;
+    font-weight: 500;
+    color: #cae962;
+    margin-bottom: 20px;
+}
+
+.title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    height: 3px;
+    width: 25px;
+    background: linear-gradient(135deg, rgb(131, 131, 131), rgb(38, 38, 39), rgb(0, 0, 0));
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    margin: 10px 0;
+    position: relative;
+}
+
+.input-box input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 0 30px 0 45px;
+    /* Added padding for icon */
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.input-box input:focus {
+    border-color: #cae962;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    color: #cae962;
+}
+
+.button-box {
+    margin-top: 40px;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 100%;
+    color: #cae962;
+    background: linear-gradient(135deg, rgb(131, 131, 131), rgb(38, 38, 39), rgb(0, 0, 0));
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(270deg, rgb(131, 131, 131), rgb(38, 38, 39), rgb(0, 0, 0));
+}
+
+.switch-text {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #333;
+}
+
+.switch-link {
+    color: rgb(0, 38, 255);
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.switch-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 730px) {
+    .cover {
+        display: none;
+    }
+
+    .login-form,
+    .signup-form {
+        width: 100%;
+    }
+
+    .signup-form {
+        display: none;
+    }
+
+    .flip-container.flipped .signup-form {
+        display: block;
+    }
+
+    .flip-container.flipped .login-form {
+        display: none;
+    }
+}

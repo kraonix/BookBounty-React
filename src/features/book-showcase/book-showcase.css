@@ -1,0 +1,157 @@
+.book-section {
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    width: 90%;
+    margin: 0 auto;
+}
+
+.book-section:last-child {
+    border-bottom: none;
+}
+
+.section-title {
+    font-family: var(--font-lato);
+    font-weight: 900;
+    color: #cae962;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.book-slider-container {
+    position: relative;
+    padding: 0 40px;
+}
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.book-slider-container:hover .slider-btn {
+    opacity: 1;
+}
+
+.slider-btn:hover {
+    background-color: #cae962;
+    color: black;
+}
+
+.slider-btn:disabled {
+    opacity: 0;
+    cursor: default;
+}
+
+.slider-btn.prev {
+    left: -10px;
+}
+
+.slider-btn.next {
+    right: -10px;
+}
+
+.slider-window {
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.slider-track {
+    display: flex;
+    gap: 20px;
+}
+
+.book-card {
+    width: 140px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.book-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.book-image {
+    object-fit: cover;
+    transition: all 0.3s ease-out;
+}
+
+.book-card:hover .book-image {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(99, 98, 98, 0.6);
+}
+
+.book-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    transition: background-color 0.3s ease-out;
+    pointer-events: none;
+}
+
+.book-card:hover .book-overlay {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.book-title {
+    text-decoration: none;
+    color: white;
+    font-family: var(--font-ubuntu);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease-out;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-card:hover .book-title {
+    color: #cae962;
+    font-weight: 800;
+    text-shadow: 0 0 5px rgba(202, 233, 98, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .book-section {
+        width: 95%;
+    }
+
+    .book-card {
+        width: 120px;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .slider-btn {
+        width: 32px;
+        height: 32px;
+    }
+}
