@@ -10,21 +10,23 @@ interface BookCardProps {
 
 export const BookCard = ({ title, image, id }: BookCardProps) => {
     return (
-        <div className="book-card">
-            <div className="book-image-wrapper">
-                <Image
-                    src="/book-placeholder.png"
-                    alt={title}
-                    width={140}
-                    height={210}
-                    className="book-image"
-                    unoptimized
-                />
-                <div className="book-overlay" />
+        <Link href={`/book/${id}`} className="book-card-link">
+            <div className="book-card">
+                <div className="book-image-wrapper">
+                    <Image
+                        src="/book-placeholder.png"
+                        alt={title}
+                        width={140}
+                        height={210}
+                        className="book-image"
+                        unoptimized
+                    />
+                    <div className="book-overlay" />
+                </div>
+                <div className="book-title">
+                    {title}
+                </div>
             </div>
-            <Link href={`/book/${id}`} className="book-title">
-                {title}
-            </Link>
-        </div>
+        </Link>
     );
 };

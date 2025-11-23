@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "Your digital sanctuary for books",
 };
 
+import { AuthProvider } from "@/features/auth/components/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,12 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${lato.variable} ${ubuntu.variable} antialiased min-h-screen flex flex-col`}>
-        <Navbar />
-        {/* Add spacing for fixed navbar (9vh approx 60-70px) + extra space requested */}
-        <div className="h-[12vh]"></div>
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body
+        className={`${lato.variable} ${ubuntu.variable} antialiased`}
+      >
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

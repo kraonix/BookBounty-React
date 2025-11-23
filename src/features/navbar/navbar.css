@@ -128,6 +128,120 @@
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
+/* Profile Dropdown Styles */
+.profile-menu-container {
+    position: relative;
+}
+
+.profile-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.profile-img {
+    border-radius: 50%;
+    border: 2px solid #cae962;
+    transition: transform 0.3s ease;
+}
+
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #cae962;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid white;
+}
+
+.profile-btn:hover .profile-img,
+.profile-btn:hover .profile-placeholder {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(202, 233, 98, 0.5);
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    width: 200px;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.profile-menu-container:hover .profile-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-header {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    color: white;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.user-email {
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: #d1d5db;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(202, 233, 98, 0.1);
+    color: #cae962;
+}
+
+.dropdown-item.danger:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar-container {
