@@ -34,6 +34,22 @@ export const BookSection = ({ title, genre }: BookSectionProps) => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Hydration-safe, responsive skeleton count
+    const [skeletonCount, setSkeletonCount] = useState(6);
+    useEffect(() => {
+        if (!loading) return;
+        const handleResize = () => {
+            const w = window.innerWidth;
+            if (w >= 1400) setSkeletonCount(7);
+            else if (w >= 900) setSkeletonCount(6);
+            else if (w >= 600) setSkeletonCount(4);
+            else setSkeletonCount(2);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [loading]);
+
     useEffect(() => {
         const fetchBooks = async () => {
             try {
@@ -48,7 +64,6 @@ export const BookSection = ({ title, genre }: BookSectionProps) => {
                 setLoading(false);
             }
         };
-
         fetchBooks();
     }, [genre]);
 
@@ -59,7 +74,6 @@ export const BookSection = ({ title, genre }: BookSectionProps) => {
                 direction === "left"
                     ? scrollContainerRef.current.scrollLeft - scrollAmount
                     : scrollContainerRef.current.scrollLeft + scrollAmount;
-
             scrollContainerRef.current.scrollTo({
                 left: newScrollLeft,
                 behavior: "smooth",
@@ -67,7 +81,25 @@ export const BookSection = ({ title, genre }: BookSectionProps) => {
         }
     };
 
-    if (loading) return <div className="text-white p-4">Loading {title}...</div>;
+    if (loading) {
+        return (
+            <div className="book-section">
+                <div className="section-title skeleton-bar shimmer" style={{ width: 160, height: 30, marginBottom: 20 }} />
+                <div className="book-slider-container">
+                    <div className="slider-window">
+                        <div className="slider-track">
+                            {[...Array(skeletonCount)].map((_, i) => (
+                                <div className="book-skeleton-block" key={i}>
+                                    <div className="book-skeleton-image shimmer" />
+                                    <div className="book-skeleton-title shimmer" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     if (books.length === 0) return (
         <div className="book-section">
             <h2 className="section-title">{title}</h2>

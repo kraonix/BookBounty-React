@@ -53,7 +53,29 @@ export const HeroCarousel = () => {
         return () => clearInterval(timer);
     }, [nextSlide, slides.length]);
 
-    if (loading) return null;
+    if (loading) {
+        return (
+            <div className="carousel carousel-skeleton">
+                <div className="carousel-slides">
+                    {[...Array(1)].map((_, i) => (
+                        <div className="carousel-slide loading" key={i}>
+                            <div className="skeleton-image shimmer" />
+                            <div className="slide-overlay" />
+                            <div className="slide-content">
+                                <div className="skeleton-title shimmer" />
+                                <div className="skeleton-description shimmer" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="carousel-tracker">
+                    {[...Array(3)].map((_, i) => (
+                        <div className="tracker-dot shimmer" key={i} />
+                    ))}
+                </div>
+            </div>
+        );
+    }
     if (slides.length === 0) return null;
 
     return (

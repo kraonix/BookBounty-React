@@ -2,17 +2,18 @@
 .admin-container {
     display: flex;
     min-height: 100vh;
-    background-color: #0a0a0a;
-    color: white;
+    background: var(--main-bg-color);
+    color: var(--foreground);
     padding-top: 80px;
+    font-family: var(--font-lato);
     /* Space for fixed navbar if present */
 }
 
 /* Sidebar (Left Panel) */
 .admin-sidebar {
     width: 30%;
-    background-color: #141414;
-    border-right: 1px solid #333;
+    background: rgba(18, 22, 18, 0.95);
+    border-right: 1px solid #232d1d;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -25,10 +26,10 @@
 .sidebar-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #E50914;
+    color: var(--primary);
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #273216;
 }
 
 .nav-btn {
@@ -39,24 +40,25 @@
     border-radius: 0.5rem;
     background-color: transparent;
     border: 1px solid transparent;
-    color: #a1a1aa;
+    color: #bfbfbf;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
     text-align: left;
     width: 100%;
+    font-family: var(--font-ubuntu);
 }
 
 .nav-btn:hover {
-    background-color: #1f1f1f;
-    color: white;
+    background-color: #212b18;
+    color: var(--primary);
 }
 
 .nav-btn.active {
-    background-color: rgba(229, 9, 20, 0.1);
-    border-color: #E50914;
-    color: #E50914;
+    background: rgba(202, 233, 98, 0.12);
+    border-color: var(--primary);
+    color: var(--primary);
     font-weight: 600;
 }
 
@@ -64,8 +66,18 @@
 .admin-content {
     width: 70%;
     padding: 2rem;
-    background-color: #0a0a0a;
+    background: rgba(0, 0, 0, 0.92);
     overflow-y: auto;
+    font-family: var(--font-lato);
+    height: calc(100vh - 80px);
+    max-height: calc(100vh - 80px);
+    box-sizing: border-box;
+    /* Hide scrollbar for aesthetics */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+.admin-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .content-header {
@@ -75,7 +87,7 @@
 .content-title {
     font-size: 2rem;
     font-weight: bold;
-    color: white;
+    color: var(--primary);
 }
 
 /* Responsive adjustments */
@@ -90,10 +102,12 @@
         position: relative;
         top: 0;
         border-right: none;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #273216;
     }
 
     .admin-content {
         width: 100%;
+        max-height: unset;
+        height: auto;
     }
 }

@@ -1,14 +1,14 @@
 .admin-form-container {
-    margin-top: 100px !important;
-    margin-bottom: 100px !important;
-    width: 60%;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #141414;
+    margin: 0;
+    width: 100%;
+    max-width: unset;
+    background: rgba(20, 22, 16, 0.94);
     padding: 2rem;
     border-radius: 0.75rem;
-    border: 1px solid #333;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #273216;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    color: var(--foreground);
+    font-family: var(--font-lato);
 }
 
 .admin-input-group {
@@ -16,34 +16,33 @@
 }
 
 .admin-label {
-    display: block;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--primary);
+    letter-spacing: 0.02em;
     font-weight: 600;
-    color: #a1a1aa;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
+.admin-select,
 .admin-input,
-.admin-textarea,
-.admin-select {
+.admin-textarea {
     width: 100%;
-    background-color: #2b2b2b;
-    border: 1px solid #404040;
-    border-radius: 0.375rem;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    color: white;
+    background: rgba(34,37,28,0.96);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #394d19;
+    color: var(--foreground);
+    font-size: 0.98rem;
+    transition: 0.15s;
     outline: none;
-    transition: all 0.2s;
+    font-family: var(--font-lato);
 }
 
+.admin-select:focus,
 .admin-input:focus,
-.admin-textarea:focus,
-.admin-select:focus {
-    border-color: #E50914;
-    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+.admin-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(202, 233, 98, 0.2);
 }
 
 .file-upload-wrapper {
@@ -94,22 +93,21 @@
 }
 
 .submit-btn {
-    width: 100%;
-    background-color: #E50914;
-    color: white;
+    background: var(--primary);
+    color: #000;
     font-weight: bold;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 2rem;
+    transition: 0.18s;
+    letter-spacing: 0.03em;
 }
-
 .submit-btn:hover {
-    background-color: #b20710;
+    background: #b4e100;
+    color: #181f08;
 }
-
 .submit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -130,11 +128,9 @@
 .carousel-slider-track {
     display: flex;
     gap: 1rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding-bottom: 1rem;
+    padding: 0.5rem 0;
     scrollbar-width: thin;
-    scrollbar-color: #E50914 #141414;
+    scrollbar-color: var(--primary) #181f08;
 }
 
 .carousel-slider-track::-webkit-scrollbar {
@@ -146,7 +142,7 @@
 }
 
 .carousel-slider-track::-webkit-scrollbar-thumb {
-    background-color: #E50914;
+    background-color: var(--primary);
     border-radius: 4px;
 }
 
@@ -155,14 +151,14 @@
     position: relative;
     border-radius: 0.5rem;
     overflow: hidden;
-    background-color: #141414;
-    border: 1px solid #333;
+    background: rgba(24, 27, 10, 0.96);
+    border: 1px solid #394d19;
     transition: transform 0.2s;
 }
 
-.admin-slide-card:hover {
-    transform: scale(1.05);
-    border-color: #E50914;
+.admin-slide-card:hover, .books-table tr:hover {
+    border-color: var(--primary);
+    background: rgba(202, 233, 98, 0.09) !important;
 }
 
 .admin-slide-image {
@@ -205,9 +201,9 @@
 
 /* Manage Books Styles */
 .books-table-container {
-    background-color: #141414;
+    background: rgba(20, 22, 16, 0.94);
     border-radius: 0.75rem;
-    border: 1px solid #333;
+    border: 1px solid #273216;
     overflow: hidden;
     margin-top: 2rem;
 }
@@ -219,20 +215,20 @@
 }
 
 .books-table th {
-    background-color: #1a1a1a;
-    color: #a1a1aa;
+    background: #232d1d;
+    color: var(--primary);
     font-weight: 600;
     padding: 1rem;
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #273216;
 }
 
 .books-table td {
     padding: 1rem;
-    border-bottom: 1px solid #262626;
-    color: #e5e5e5;
+    border-bottom: 1px solid #273216;
+    color: var(--foreground);
     font-size: 0.875rem;
 }
 
@@ -251,19 +247,38 @@
     padding: 0.5rem;
     border-radius: 0.25rem;
     transition: background-color 0.2s;
-    color: #a1a1aa;
+    color: var(--primary);
 }
 
 .action-btn.delete:hover {
-    background-color: rgba(229, 9, 20, 0.1);
-    color: #E50914;
+    background: rgba(202, 233, 98, 0.15);
+    color: #000;
 }
 
 .section-header {
     font-size: 1.5rem;
-    font-weight: bold;
-    color: #E50914;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    border-bottom: 1px solid #273216;
+}
+
+.form-box {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    background: rgba(26, 30, 18, 0.97);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #273216;
+}
+
+.error-text {
+    color: #db3939;
+    background: #2e1818;
+    border: 1px solid #bd2323;
+    padding: 0.6em 1em;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    border-radius: 6px;
 }
