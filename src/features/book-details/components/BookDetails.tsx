@@ -1,25 +1,64 @@
+/**
+ * Book Details Component
+ * 
+ * Displays detailed information about a specific book.
+ * 
+ * Features:
+ * - Shows book cover, title, author, description, and metadata.
+ * - "Read Now" button to open the PDF.
+ * - "Add to Favorites" functionality (if implemented).
+ * - Fetches data based on the book ID from the URL.
+ */
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import Image from "next/image";
-import { Play, Star, ThumbsUp, ThumbsDown, Bookmark, EyeOff } from "lucide-react";
-import "../book-details.css";
+import { Play, Star, ThumbsUp, ThumbsDown, Bookmark, EyeOff, Download } from "lucide-react";
+import "@/features/book-details/book-details.css";
 
-interface BookDetailsProps {
-    id: string;
+interface Book {
+    _id: string;
+    title: string;
+    thumbnail: string;
+    author: string;
+    description: string;
+    genre: string;
+    likes: number;
+    views: number;
+    dislikes: number;
+    saved: number;
+    tags: string[];
+    pdf: string;
 }
 
-export const BookDetails = ({ id }: BookDetailsProps) => {
-    // Mock data - in a real app, fetch based on ID
-    const book = {
-        title: "Attack on Titan: Lost Girls",
-        author: "Hajime Isayama",
-        description: "The stories are about two female characters in the series: Mikasa Ackerman and Annie Leonhart. \"Lost in the cruel world\" is about Mikasa and her relationship with Eren, featuring a vision in an alternative universe where her parents weren't murdered.",
-        rating: 4.5,
-        genre: "Manga",
-        views: "1.2M",
-        uploadDate: "2023-11-15",
-        image: "https://placehold.co/300x450?text=Attack+on+Titan&bg=1a1a1a&color=cae962"
-    };
+export const BookDetails = () => {
+    const { id } = useParams();
+    const [book, setBook] = useState<Book | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBook = async () => {
+            try {
+                const res = await fetch(`/api/books/${id}`);
+                const data = await res.json();
+                if (data._id) {
+                    setBook(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch book", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (id) fetchBook();
+    }, [id]);
+
+    if (loading) return <div className="min-h-screen text-white flex items-center justify-center">Loading...</div>;
+    if (!book) return <div className="min-h-screen text-white flex items-center justify-center">Book not found</div>;
+
+    // Mock rating for now as it's not in the DB schema yet
+    const rating = 4.5;
 
     return (
         <div className="book-details-container">
@@ -28,12 +67,24 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
                 <div className="details-left">
                     <div className="book-cover-wrapper">
                         <Image
-                            src={book.image}
+                            src={book.thumbnail}
                             alt={book.title}
                             fill
                             className="book-cover"
                             unoptimized
                         />
+                    </div>
+                    {/* Added Download Button to Left Column to match previous functionality if desired, or keep it hidden if strictly following user's CSS/Layout which didn't have it explicitly in the snippet but had action buttons */}
+                    <div className="action-buttons w-full" style={{ marginTop: '1rem' }}>
+                        <a
+                            href={book.pdf}
+                            download={`${book.title}.pdf`}
+                            className="action-btn"
+                            style={{ justifyContent: 'center', width: '100%' }}
+                        >
+                            <Download size={20} />
+                            Download PDF
+                        </a>
                     </div>
                 </div>
 
@@ -41,10 +92,10 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
                 <div className="details-middle">
                     <h1 className="book-title-large">{book.title}</h1>
 
-                    <button className="read-now-btn">
+                    <a href={book.pdf} target="_blank" rel="noopener noreferrer" className="read-now-btn no-underline">
                         <Play fill="black" size={20} />
                         Read Now
-                    </button>
+                    </a>
 
                     <div className="description-box">
                         <p className="description-text">
@@ -58,12 +109,12 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
                                 <Star
                                     key={star}
                                     size={24}
-                                    fill={star <= Math.floor(book.rating) ? "#cae962" : "none"}
-                                    stroke={star <= Math.floor(book.rating) ? "#cae962" : "#6b7280"}
+                                    fill={star <= Math.floor(rating) ? "#cae962" : "none"}
+                                    stroke={star <= Math.floor(rating) ? "#cae962" : "#6b7280"}
                                 />
                             ))}
                         </div>
-                        <span className="rating-value">{book.rating}/5</span>
+                        <span className="rating-value">{rating}/5</span>
                     </div>
                 </div>
 
@@ -91,7 +142,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
 
                     <div className="action-buttons">
                         <button className="action-btn">
-                            <ThumbsUp size={18} /> Like
+                            <ThumbsUp size={18} /> Like ({book.likes})
                         </button>
                         <button className="action-btn">
                             <ThumbsDown size={18} /> Dislike

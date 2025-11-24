@@ -1,10 +1,22 @@
+/**
+ * Navbar Component
+ * 
+ * The top navigation bar for the application.
+ * 
+ * Features:
+ * - Logo and branding.
+ * - Navigation links (Home, Categories, etc.).
+ * - User authentication status (Login/Signup vs Profile).
+ * - Admin link (visible only to admins).
+ * - Sticky positioning with scroll effect.
+ */
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { Search, User, LogOut, Heart, Settings } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
-import "../navbar.css";
+import "@/features/navbar/navbar.css";
 
 export const Navbar = () => {
   const { data: session } = useSession();
@@ -66,11 +78,17 @@ export const Navbar = () => {
                 <div className="dropdown-header">
                   <span className="user-name">{session.user?.name}</span>
                   <span className="user-email">{session.user?.email}</span>
+                  <span className="text-xs text-gray-500">Role: {session.user?.role || "none"}</span>
                 </div>
                 <div className="dropdown-divider" />
                 <Link href="/profile" className="dropdown-item">
                   <User size={16} /> Profile
                 </Link>
+                {session.user?.role === "admin" && (
+                  <Link href="/admin" className="dropdown-item">
+                    <Settings size={16} /> Admin Page
+                  </Link>
+                )}
                 <Link href="/wishlist" className="dropdown-item">
                   <Heart size={16} /> Wishlist
                 </Link>

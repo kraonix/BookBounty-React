@@ -7,5 +7,5 @@ interface PageProps {
 }
 
 export default function BookPage({ params }: PageProps) {
-    return <BookDetails id={params.id} />;
+    return <BookDetails />;
 }

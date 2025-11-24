@@ -6,7 +6,7 @@ import Image from "next/image";
 import { User, Mail, Lock } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import "../auth.css";
+import "@/features/auth/auth.css";
 
 export const AuthPage = () => {
     const [isFlipped, setIsFlipped] = useState(false);
@@ -31,7 +31,15 @@ export const AuthPage = () => {
         if (result?.error) {
             alert(result.error);
         } else {
-            router.push("/");
+            // Fetch session to check role
+            const res = await fetch("/api/auth/session");
+            const session = await res.json();
+
+            if (session?.user?.role === "admin") {
+                router.push("/admin");
+            } else {
+                router.push("/");
+            }
         }
     };
 

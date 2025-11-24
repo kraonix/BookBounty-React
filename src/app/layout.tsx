@@ -1,3 +1,13 @@
+/**
+ * Root Layout
+ * 
+ * The main layout wrapper for the entire application.
+ * It handles:
+ * - Global CSS imports.
+ * - Font configuration (Inter).
+ * - AuthProvider for session management.
+ * - Navbar and Footer integration.
+ */
 import type { Metadata } from "next";
 import { Lato, Ubuntu } from "next/font/google";
 import "./globals.css";

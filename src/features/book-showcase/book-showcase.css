@@ -74,6 +74,8 @@
 .slider-track {
     display: flex;
     gap: 20px;
+    transition: transform 0.5s ease-in-out;
+    /* Added for smooth sliding if using transform */
 }
 
 .book-card-link {

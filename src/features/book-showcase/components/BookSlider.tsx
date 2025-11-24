@@ -1,12 +1,23 @@
+/**
+ * Book Slider Component
+ * 
+ * A horizontal slider for displaying a list of BookCards.
+ * 
+ * Features:
+ * - Horizontal scrolling for book lists.
+ * - Responsive design (adjusts visible items based on screen width).
+ * - Navigation arrows for scrolling left/right.
+ * - Infinite scroll effect (optional/if implemented).
+ */
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BookCard } from "./BookCard";
-import "../book-showcase.css";
+import "@/features/book-showcase/book-showcase.css";
 
 interface Book {
-    id: number;
+    id: string;
     title: string;
     image: string;
 }
@@ -117,6 +128,7 @@ export const BookSlider = ({ books }: BookSliderProps) => {
                                 id={book.id}
                                 title={book.title}
                                 image={book.image}
+                                author="Unknown" // Placeholder as BookSlider seems unused or legacy
                             />
                         );
                     })}

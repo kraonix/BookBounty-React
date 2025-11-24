@@ -1,0 +1,203 @@
+/* ---- MAIN CONTAINER ---- */
+.admin-form-container {
+    margin: 100px auto;
+    width: 60%;
+    max-width: 1200px;
+    background-color: #141414;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+/* ---- HEADERS ---- */
+.section-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.subtext {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ---- FORM ---- */
+.form-box {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    background-color: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #333;
+}
+
+.form-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.admin-select {
+    width: 100%;
+    background-color: #222;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.admin-select:focus {
+    outline: none;
+    border-color: #666;
+}
+
+/* ---- BUTTON ---- */
+.submit-btn {
+    background-color: #e50914;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #b40610;
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---- ERROR ---- */
+.error-text {
+    color: #E50914;
+    margin-top: 8px;
+    font-size: 0.9rem;
+}
+
+/* ---- SLIDES LIST ---- */
+.carousel-manager-container {
+    margin-top: 2.5rem;
+}
+
+.empty-text {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+    font-style: italic;
+}
+
+/* ---- SLIDER ---- */
+.carousel-slider-wrapper {
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.carousel-slider-track {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+/* ---- SLIDE CARD ---- */
+.admin-slide-card {
+    background-color: #111;
+    border: 1px solid #333;
+    border-radius: 0.5rem;
+    width: 160px;
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-slide-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* ---- OVERLAY ---- */
+.admin-slide-card:hover .admin-slide-overlay {
+    opacity: 1;
+}
+
+.admin-slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.remove-slide-btn {
+    background-color: #e50914;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.remove-slide-btn:hover {
+    background-color: #b40610;
+}
+
+/* ---- TITLE BOX ---- */
+.slide-title-box {
+    background-color: #1a1a1a;
+    padding: 6px;
+}
+
+.slide-title {
+    font-size: 0.75rem;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---- MISSING BOOK ---- */
+.missing-book {
+    padding: 1rem;
+    height: 100%;
+    text-align: center;
+    color: #ff4b4b;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.missing-delete {
+    background-color: #e50914;
+    border: none;
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 6px;
+    color: white;
+    cursor: pointer;
+}

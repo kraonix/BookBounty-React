@@ -4,32 +4,57 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import "../carousel.css";
 
-interface CarouselItem {
-    id: number;
-    image: string;
+interface Book {
+    _id: string;
     title: string;
-    text: string;
+    coverImage: string;
+    description: string;
 }
 
-// Mock data
-const CAROUSEL_ITEMS: CarouselItem[] = Array.from({ length: 10 }).map((_, i) => ({
-    id: i,
-    image: `https://placehold.co/1920x600?text=Spotlight+${i + 1}&bg=1a1a1a&color=cae962`,
-    title: `Spotlight #${i + 1}`,
-    text: "Welcome to BookBounty, your digital sanctuary where the magic of storytelling awaits. With an extensive array of books spanning genres and authors, embark on a journey through worlds both familiar and fantastical.",
-}));
+interface CarouselItem {
+    _id: string;
+    book: Book;
+}
 
 export const HeroCarousel = () => {
+    const [slides, setSlides] = useState<CarouselItem[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    const nextSlide = useCallback(() => {
-        setCurrentIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
-    }, []);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchSlides = async () => {
+            try {
+                const res = await fetch("/api/carousel");
+                if (res.ok) {
+                    const data = await res.json();
+                    // Filter out any slides where book might be null (deleted book)
+                    const validSlides = data.filter((item: any) => item.book);
+                    setSlides(validSlides);
+                }
+            } catch (error) {
+                console.error("Failed to fetch carousel slides", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSlides();
+    }, []);
+
+    const nextSlide = useCallback(() => {
+        if (slides.length > 0) {
+            setCurrentIndex((prev) => (prev + 1) % slides.length);
+        }
+    }, [slides.length]);
+
+    useEffect(() => {
+        if (slides.length === 0) return;
         const timer = setInterval(nextSlide, 5000);
         return () => clearInterval(timer);
-    }, [nextSlide]);
+    }, [nextSlide, slides.length]);
+
+    if (loading) return null;
+    if (slides.length === 0) return null;
 
     return (
         <div className="carousel">
@@ -38,11 +63,11 @@ export const HeroCarousel = () => {
                 className="carousel-slides"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-                {CAROUSEL_ITEMS.map((item) => (
-                    <div key={item.id} className="carousel-slide">
+                {slides.map((item) => (
+                    <div key={item._id} className="carousel-slide">
                         <Image
-                            src={item.image}
-                            alt={item.title}
+                            src={item.book.coverImage}
+                            alt={item.book.title}
                             fill
                             className="slide-image"
                             unoptimized
@@ -53,11 +78,11 @@ export const HeroCarousel = () => {
 
                         {/* Content Overlay */}
                         <div className="slide-content">
-                            <h2 className="slide-title">{item.title}</h2>
+                            <h2 className="slide-title">{item.book.title}</h2>
                             <div className="slide-text-box">
-                                <h3 className="slide-subtitle">WELCOME !</h3>
+                                <h3 className="slide-subtitle">FEATURED</h3>
                                 <p className="slide-description">
-                                    {item.text}
+                                    {item.book.description}
                                 </p>
                             </div>
                         </div>
@@ -67,7 +92,7 @@ export const HeroCarousel = () => {
 
             {/* Tracker */}
             <div className="carousel-tracker">
-                {CAROUSEL_ITEMS.map((_, index) => (
+                {slides.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentIndex(index)}

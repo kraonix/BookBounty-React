@@ -1,3 +1,13 @@
+/**
+ * MongoDB Connection Utility
+ * 
+ * Handles the connection to the MongoDB database.
+ * 
+ * Features:
+ * - Caches the connection to prevent multiple connections in serverless environments (Next.js).
+ * - Uses `mongoose` for object modeling.
+ * - Reads connection string from environment variables.
+ */
 import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
