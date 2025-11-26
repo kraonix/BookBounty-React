@@ -198,21 +198,12 @@
     flex-direction: column;
 }
 
-.user-name {
-    color: white;
-    font-weight: bold;
-    font-size: 0.95rem;
-}
+.user-name {}
 
 .user-email {
-    color: #9ca3af;
     font-size: 0.8rem;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
-    margin: 5px 0;
+    color: #d1d5db;
+    overflow: hidden;
 }
 
 .dropdown-item {

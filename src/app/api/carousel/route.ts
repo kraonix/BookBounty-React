@@ -5,6 +5,8 @@ import Book from "@/models/Book"; // Ensure Book model is registered
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
+export const revalidate = 60; // Cache for 60 seconds
+
 export async function GET(req: NextRequest) {
     try {
         await dbConnect();
@@ -13,8 +15,18 @@ export async function GET(req: NextRequest) {
             // This block is just to ensure the import is used and model registered
         }
 
-        const slides = await Carousel.find({}).populate("book");
-        return NextResponse.json(slides);
+        // Optimize populate: Select only necessary fields
+        const slides = await Carousel.find({})
+            .populate({
+                path: "book",
+                select: "title coverImage coverImageUrl description thumbnail thumbnailUrl"
+            });
+
+        return NextResponse.json(slides, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+            },
+        });
     } catch (error) {
         console.error("Carousel fetch error:", error);
         return NextResponse.json({ error: "Failed to fetch carousel slides" }, { status: 500 });

@@ -40,7 +40,7 @@ export const BookDetails = () => {
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const res = await fetch(`/api/books/${id}`);
+                const res = await fetch(`/api/books/${id}`, { next: { revalidate: 60 } });
                 const data = await res.json();
                 if (data._id) {
                     setBook(data);

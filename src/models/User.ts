@@ -41,6 +41,15 @@ const UserSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default: "user",
     },
+    bio: {
+        type: String,
+        maxlength: [500, "Bio cannot be more than 500 characters"],
+        default: "",
+    },
+    phone: {
+        type: String,
+        default: "",
+    },
 }, { timestamps: true });
 
 // Prevent Mongoose model recompilation error in development

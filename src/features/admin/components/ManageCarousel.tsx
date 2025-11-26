@@ -19,6 +19,7 @@ interface Book {
     _id: string;
     title: string;
     thumbnail: string;
+    thumbnailUrl?: string;
 }
 
 interface Slide {
@@ -33,11 +34,11 @@ export const ManageCarousel = () => {
     const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
-        const resSlides = await fetch("/api/carousel");
+        const resSlides = await fetch("/api/carousel", { next: { revalidate: 60 } });
         const dataSlides = await resSlides.json();
         if (Array.isArray(dataSlides)) setSlides(dataSlides);
 
-        const resBooks = await fetch("/api/books?limit=100");
+        const resBooks = await fetch("/api/books?limit=100", { next: { revalidate: 60 } });
         const dataBooks = await resBooks.json();
         if (dataBooks.books) setBooks(dataBooks.books);
     };
@@ -133,7 +134,7 @@ export const ManageCarousel = () => {
                                     {slide.book ? (
                                         <>
                                             <img
-                                                src={slide.book.thumbnail}
+                                                src={slide.book.thumbnailUrl || slide.book.thumbnail}
                                                 alt={slide.book.title}
                                                 className="admin-slide-image"
                                             />

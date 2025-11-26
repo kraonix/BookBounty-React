@@ -8,6 +8,7 @@ interface Book {
     _id: string;
     title: string;
     coverImage: string;
+    coverImageUrl?: string;
     description: string;
 }
 
@@ -24,7 +25,7 @@ export const HeroCarousel = () => {
     useEffect(() => {
         const fetchSlides = async () => {
             try {
-                const res = await fetch("/api/carousel");
+                const res = await fetch("/api/carousel", { next: { revalidate: 60 } });
                 if (res.ok) {
                     const data = await res.json();
                     // Filter out any slides where book might be null (deleted book)
@@ -88,7 +89,7 @@ export const HeroCarousel = () => {
                 {slides.map((item) => (
                     <div key={item._id} className="carousel-slide">
                         <Image
-                            src={item.book.coverImage}
+                            src={item.book.coverImageUrl || item.book.coverImage}
                             alt={item.book.title}
                             fill
                             className="slide-image"

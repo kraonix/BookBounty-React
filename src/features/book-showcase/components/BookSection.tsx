@@ -53,7 +53,7 @@ export const BookSection = ({ title, genre }: BookSectionProps) => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const res = await fetch(`/api/books?genre=${genre}&limit=15`);
+                const res = await fetch(`/api/books?genre=${genre}&limit=15`, { next: { revalidate: 60 } });
                 const data = await res.json();
                 if (data.books) {
                     setBooks(data.books);

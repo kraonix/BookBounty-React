@@ -4,6 +4,8 @@ import Book from "@/models/Book";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
+export const revalidate = 60; // Cache for 60 seconds
+
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const genre = searchParams.get("genre");
@@ -18,14 +20,23 @@ export async function GET(req: NextRequest) {
             query.genre = genre;
         }
 
+        // Optimize query: Select only necessary fields, exclude heavy Base64 (pdf, coverImage)
         const books = await Book.find(query)
+            .select("title thumbnail author genre _id views likes")
             .sort({ views: -1 }) // Sort by views descending
             .skip(skip)
             .limit(limit);
 
         const total = await Book.countDocuments(query);
 
-        return NextResponse.json({ books, total, page, totalPages: Math.ceil(total / limit) });
+        return NextResponse.json(
+            { books, total, page, totalPages: Math.ceil(total / limit) },
+            {
+                headers: {
+                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+                },
+            }
+        );
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch books" }, { status: 500 });
     }

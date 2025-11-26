@@ -41,25 +41,36 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.role = (user as any).role;
+                token.picture = user.image;
             }
+
+            // Handle session update trigger
+            if (trigger === "update" && session) {
+                if (session.user.image) token.picture = session.user.image;
+                if (session.user.name) token.name = session.user.name;
+            }
+
             return token;
         },
         async session({ session, token }) {
             if (session.user && session.user.email) {
+                // Use token data for immediate updates
+                if (token.picture) session.user.image = token.picture;
+                if (token.name) session.user.name = token.name;
+
                 try {
                     await dbConnect();
                     const dbUser = await User.findOne({ email: session.user.email });
-                    console.log("Session Callback - Email:", session.user.email);
-                    console.log("Session Callback - DB User Role:", dbUser?.role);
                     if (dbUser) {
                         session.user.role = dbUser.role;
+                        // Ensure DB is source of truth if available, but token takes precedence for immediate UI updates
+                        // actually, let's trust the DB for role, but token for image/name if recently updated
                     }
                 } catch (error) {
                     console.error("Error fetching user role in session:", error);
-                    // Fallback to token role if DB fails
                     session.user.role = token.role as string;
                 }
             }
