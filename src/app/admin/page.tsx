@@ -57,49 +57,44 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="admin-container">
-            {/* Left Panel - Sidebar */}
-            <aside className="admin-sidebar">
-                <h1 className="sidebar-title">Admin Dashboard</h1>
+        <div className="admin-wrapper">
+            <div className="admin-container">
+                {/* Left Panel - Sidebar */}
+                <aside className="admin-sidebar">
+                    <h1 className="sidebar-title">Admin Dashboard</h1>
 
-                <nav className="flex flex-col gap-2">
-                    <button
-                        className={`nav-btn ${activeView === "add-books" ? "active" : ""}`}
-                        onClick={() => setActiveView("add-books")}
-                    >
-                        <BookPlus size={20} />
-                        Add Books
-                    </button>
+                    <nav className="flex flex-col gap-2">
+                        <button
+                            className={`nav-btn ${activeView === "add-books" ? "active" : ""}`}
+                            onClick={() => setActiveView("add-books")}
+                        >
+                            <BookPlus size={20} />
+                            Add Books
+                        </button>
 
-                    <button
-                        className={`nav-btn ${activeView === "manage-books" ? "active" : ""}`}
-                        onClick={() => setActiveView("manage-books")}
-                    >
-                        <Library size={20} />
-                        Manage Books
-                    </button>
+                        <button
+                            className={`nav-btn ${activeView === "manage-books" ? "active" : ""}`}
+                            onClick={() => setActiveView("manage-books")}
+                        >
+                            <Library size={20} />
+                            Manage Books
+                        </button>
 
-                    <button
-                        className={`nav-btn ${activeView === "manage-carousel" ? "active" : ""}`}
-                        onClick={() => setActiveView("manage-carousel")}
-                    >
-                        <Images size={20} />
-                        Manage Carousel
-                    </button>
-                </nav>
-            </aside>
+                        <button
+                            className={`nav-btn ${activeView === "manage-carousel" ? "active" : ""}`}
+                            onClick={() => setActiveView("manage-carousel")}
+                        >
+                            <Images size={20} />
+                            Manage Carousel
+                        </button>
+                    </nav>
+                </aside>
 
-            {/* Right Panel - Content Area */}
-            <main className="admin-content">
-                <div className="content-header">
-                    <h2 className="content-title">
-                        {activeView === "add-books" && "Add New Book"}
-                        {activeView === "manage-books" && "Manage Library"}
-                        {activeView === "manage-carousel" && "Carousel Management"}
-                    </h2>
-                </div>
-                {renderContent()}
-            </main>
+                {/* Right Panel - Content Area */}
+                <main className="admin-content">
+                    {renderContent()}
+                </main>
+            </div>
         </div>
     );
 }

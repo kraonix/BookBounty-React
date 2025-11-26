@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (session.user && session.user.email) {
-                // Use token data for immediate updates
+                // Use token data for immediate updates (fallback)
                 if (token.picture) session.user.image = token.picture;
                 if (token.name) session.user.name = token.name;
 
@@ -66,8 +66,8 @@ export const authOptions: NextAuthOptions = {
                     const dbUser = await User.findOne({ email: session.user.email });
                     if (dbUser) {
                         session.user.role = dbUser.role;
-                        // Ensure DB is source of truth if available, but token takes precedence for immediate UI updates
-                        // actually, let's trust the DB for role, but token for image/name if recently updated
+                        session.user.image = dbUser.image; // Prioritize DB image
+                        session.user.name = dbUser.name;
                     }
                 } catch (error) {
                     console.error("Error fetching user role in session:", error);
@@ -85,7 +85,7 @@ export const authOptions: NextAuthOptions = {
                         const newUser = new User({
                             name: user.name,
                             email: user.email,
-                            image: user.image,
+                            image: "/avatars/avatar1.jpg", // Use default avatar instead of Google's
                             provider: "google",
                             role: "user", // Default role
                         });

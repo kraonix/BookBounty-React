@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
     },
     image: {
         type: String,
+        default: "/avatars/avatar1.jpg",
     },
     provider: {
         type: String,

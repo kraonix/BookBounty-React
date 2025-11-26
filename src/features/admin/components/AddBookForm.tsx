@@ -96,154 +96,159 @@ export const AddBookForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="admin-form-container">
-            <h2 className="text-xl font-bold mb-4 text-[#E50914] border-b border-gray-800 pb-2">Add New Book</h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left Column: Inputs */}
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="admin-input-group mb-0">
-                            <label className="admin-label">Title</label>
-                            <input
-                                type="text"
-                                required
-                                className="admin-input"
-                                placeholder="Book Title"
-                                value={formData.title}
-                                onChange={e => setFormData({ ...formData, title: e.target.value })}
-                            />
-                        </div>
-                        <div className="admin-input-group mb-0">
-                            <label className="admin-label">Author</label>
-                            <input
-                                type="text"
-                                required
-                                className="admin-input"
-                                placeholder="Author Name"
-                                value={formData.author}
-                                onChange={e => setFormData({ ...formData, author: e.target.value })}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="admin-input-group mb-0">
-                            <label className="admin-label">Genre</label>
-                            <select
-                                className="admin-select"
-                                value={formData.genre}
-                                onChange={e => setFormData({ ...formData, genre: e.target.value })}
-                            >
-                                <option value="Fiction">Fiction</option>
-                                <option value="Non-Fiction">Non-Fiction</option>
-                                <option value="Manga">Manga</option>
-                                <option value="Horror">Horror</option>
-                                <option value="Sci-Fi">Sci-Fi</option>
-                                <option value="Fantasy">Fantasy</option>
-                            </select>
-                        </div>
-                        <div className="admin-input-group mb-0">
-                            <label className="admin-label">Tags</label>
-                            <input
-                                type="text"
-                                className="admin-input"
-                                placeholder="e.g. Adventure"
-                                value={formData.tags}
-                                onChange={e => setFormData({ ...formData, tags: e.target.value })}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="admin-input-group mb-0">
-                        <label className="admin-label">Description</label>
-                        <textarea
-                            required
-                            rows={5}
-                            className="admin-textarea resize-none"
-                            placeholder="Book Description..."
-                            value={formData.description}
-                            onChange={e => setFormData({ ...formData, description: e.target.value })}
-                        />
-                    </div>
-                </div>
-
-                {/* Right Column: Files */}
-                <div className="flex flex-col gap-4">
-                    <div className="grid grid-cols-2 gap-4 flex-1">
-                        <div className="admin-input-group mb-0 h-full">
-                            <label className="admin-label">Thumbnail</label>
-                            <div className="file-upload-wrapper h-[calc(100%-1.5rem)]">
-                                <label className="file-upload-label">
-                                    <ImageIcon size={20} />
-                                    <span className="text-xs text-center">{files.thumbnail ? files.thumbnail.name : "Choose File"}</span>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        required={!files.thumbnail}
-                                        onChange={e => handleFileChange(e, "thumbnail")}
-                                        className="file-upload-input"
-                                    />
-                                </label>
-                            </div>
-                        </div>
-                        <div className="admin-input-group mb-0 h-full">
-                            <label className="admin-label">Cover</label>
-                            <div className="file-upload-wrapper h-[calc(100%-1.5rem)]">
-                                <label className="file-upload-label">
-                                    <ImageIcon size={20} />
-                                    <span className="text-xs text-center">{files.coverImage ? files.coverImage.name : "Choose File"}</span>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        required={!files.coverImage}
-                                        onChange={e => handleFileChange(e, "coverImage")}
-                                        className="file-upload-input"
-                                    />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="admin-input-group mb-0">
-                        <label className="admin-label">Book PDF</label>
-                        <div className="file-upload-wrapper">
-                            <label className="file-upload-label py-3 min-h-[auto]">
-                                <FileText size={20} />
-                                <span className="text-xs">{files.pdf ? files.pdf.name : "Choose PDF File"}</span>
-                                <input
-                                    type="file"
-                                    accept="application/pdf"
-                                    required={!files.pdf}
-                                    onChange={e => handleFileChange(e, "pdf")}
-                                    className="file-upload-input"
-                                />
-                            </label>
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="submit-btn mt-auto py-3 text-sm uppercase tracking-wider"
-                    >
-                        {loading ? (
-                            <span className="flex items-center justify-center gap-2">
-                                <Upload className="animate-spin" size={16} /> Uploading...
-                            </span>
-                        ) : (
-                            "Add Book"
-                        )}
-                    </button>
-                </div>
+        <div className="content-panel">
+            <div className="panel-header">
+                <h2 className="panel-title">Add New Book</h2>
+                <p className="panel-subtitle">Upload a new book to the library.</p>
             </div>
 
-            {message && (
-                <div className={`mt-4 p-3 rounded text-center text-sm ${message.includes("success") ? "bg-green-900/50 text-green-200 border border-green-800" : "bg-red-900/50 text-red-200 border border-red-800"}`}>
-                    {message}
+            <form onSubmit={handleSubmit} className="admin-form">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Left Column: Inputs */}
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="form-group">
+                                <label className="form-label">Title</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="form-input"
+                                    placeholder="Book Title"
+                                    value={formData.title}
+                                    onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Author</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="form-input"
+                                    placeholder="Author Name"
+                                    value={formData.author}
+                                    onChange={e => setFormData({ ...formData, author: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="form-group">
+                                <label className="form-label">Genre</label>
+                                <select
+                                    className="form-select"
+                                    value={formData.genre}
+                                    onChange={e => setFormData({ ...formData, genre: e.target.value })}
+                                >
+                                    <option value="Fiction">Fiction</option>
+                                    <option value="Non-Fiction">Non-Fiction</option>
+                                    <option value="Manga">Manga</option>
+                                    <option value="Horror">Horror</option>
+                                    <option value="Sci-Fi">Sci-Fi</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Tags</label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="e.g. Adventure"
+                                    value={formData.tags}
+                                    onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Description</label>
+                            <textarea
+                                required
+                                rows={5}
+                                className="form-textarea"
+                                placeholder="Book Description..."
+                                value={formData.description}
+                                onChange={e => setFormData({ ...formData, description: e.target.value })}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Right Column: Files */}
+                    <div className="flex flex-col gap-4">
+                        <div className="grid grid-cols-2 gap-4 flex-1">
+                            <div className="form-group h-full">
+                                <label className="form-label">Thumbnail</label>
+                                <div className="file-upload-wrapper h-[calc(100%-1.5rem)]">
+                                    <label className="file-upload-label">
+                                        <ImageIcon size={20} />
+                                        <span className="text-xs text-center">{files.thumbnail ? files.thumbnail.name : "Choose File"}</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            required={!files.thumbnail}
+                                            onChange={e => handleFileChange(e, "thumbnail")}
+                                            className="file-upload-input"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="form-group h-full">
+                                <label className="form-label">Cover</label>
+                                <div className="file-upload-wrapper h-[calc(100%-1.5rem)]">
+                                    <label className="file-upload-label">
+                                        <ImageIcon size={20} />
+                                        <span className="text-xs text-center">{files.coverImage ? files.coverImage.name : "Choose File"}</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            required={!files.coverImage}
+                                            onChange={e => handleFileChange(e, "coverImage")}
+                                            className="file-upload-input"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Book PDF</label>
+                            <div className="file-upload-wrapper">
+                                <label className="file-upload-label py-3 min-h-[auto]">
+                                    <FileText size={20} />
+                                    <span className="text-xs">{files.pdf ? files.pdf.name : "Choose PDF File"}</span>
+                                    <input
+                                        type="file"
+                                        accept="application/pdf"
+                                        required={!files.pdf}
+                                        onChange={e => handleFileChange(e, "pdf")}
+                                        className="file-upload-input"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="save-btn mt-auto w-full flex justify-center"
+                        >
+                            {loading ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <Upload className="animate-spin" size={16} /> Uploading...
+                                </span>
+                            ) : (
+                                "Add Book"
+                            )}
+                        </button>
+                    </div>
                 </div>
-            )}
-        </form>
+
+                {message && (
+                    <div className={`mt-4 p-3 rounded text-center text-sm ${message.includes("success") ? "bg-green-900/50 text-green-200 border border-green-800" : "bg-red-900/50 text-red-200 border border-red-800"}`}>
+                        {message}
+                    </div>
+                )}
+            </form>
+        </div>
     );
 };
 

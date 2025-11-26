@@ -85,91 +85,100 @@ export const ManageCarousel = () => {
     const availableBooks = books.filter(b => !slides.some(s => s.book?._id === b._id));
 
     return (
-        <div className="admin-form-container">
-            <div className="add-section">
-                <h2 className="section-header">Add Book to Carousel</h2>
-                <p className="subtext">Select a book to feature in the home page carousel. Max 10 slides.</p>
+        <div className="content-panel">
+            <div className="panel-header">
+                <h2 className="panel-title">Manage Carousel</h2>
+                <p className="panel-subtitle">Select books to feature on the home page.</p>
+            </div>
 
-                <form onSubmit={handleAddSlide} className="form-box">
-                    <div className="form-field">
-                        <label className="admin-label">Select Book</label>
-                        <select
-                            value={selectedBookId}
-                            onChange={e => setSelectedBookId(e.target.value)}
-                            className="admin-select"
-                        >
-                            <option value="">-- Select a Book --</option>
-                            {availableBooks.map(book => (
-                                <option key={book._id} value={book._id}>
-                                    {book.title}
-                                </option>
-                            ))}
-                        </select>
+            <div className="add-section mb-8">
+                <form onSubmit={handleAddSlide} className="admin-form">
+                    <div className="form-group">
+                        <label className="form-label">Select Book</label>
+                        <div className="flex gap-4">
+                            <select
+                                value={selectedBookId}
+                                onChange={e => setSelectedBookId(e.target.value)}
+                                className="form-select flex-1"
+                            >
+                                <option value="">-- Select a Book --</option>
+                                {availableBooks.map(book => (
+                                    <option key={book._id} value={book._id}>
+                                        {book.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                type="submit"
+                                disabled={loading || !selectedBookId || slides.length >= 9}
+                                className="save-btn mt-0"
+                            >
+                                {loading ? "Adding..." : "Add to Carousel"}
+                            </button>
+                        </div>
                     </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading || !selectedBookId || slides.length >= 10}
-                        className="submit-btn"
-                    >
-                        {loading ? "Adding..." : "Add to Carousel"}
-                    </button>
                 </form>
 
-                {slides.length >= 10 && (
-                    <p className="error-text">Carousel is full (10/10).</p>
+                {slides.length >= 9 && (
+                    <p className="text-red-500 mt-2 text-sm">Carousel is full (9/9).</p>
                 )}
             </div>
 
             <div className="carousel-manager-container">
-                <h2 className="section-header">Current Slides ({slides.length}/10)</h2>
+                <h3 className="text-xl font-bold text-white mb-4">Current Slides ({slides.length}/9)</h3>
 
-                {slides.length === 0 ? (
-                    <div className="empty-text">No slides added yet.</div>
-                ) : (
-                    <div className="carousel-slider-wrapper">
-                        <div className="carousel-slider-track">
-                            {slides.map(slide => (
-                                <div key={slide._id} className="admin-slide-card">
-                                    {slide.book ? (
-                                        <>
-                                            <img
-                                                src={slide.book.thumbnailUrl || slide.book.thumbnail}
-                                                alt={slide.book.title}
-                                                className="admin-slide-image"
-                                            />
+                <div className="carousel-grid">
+                    {Array.from({ length: 9 }).map((_, index) => {
+                        const slide = slides[index];
+                        return slide ? (
+                            <div key={slide._id} className="admin-slide-card">
+                                {slide.book ? (
+                                    <>
+                                        <img
+                                            src={slide.book.thumbnailUrl || slide.book.thumbnail}
+                                            alt={slide.book.title}
+                                            className="admin-slide-image"
+                                        />
 
-                                            <div className="admin-slide-overlay">
-                                                <button
-                                                    onClick={() => handleDelete(slide._id)}
-                                                    className="remove-slide-btn"
-                                                >
-                                                    <Trash2 size={16} /> Remove
-                                                </button>
-                                            </div>
-
-                                            <div className="slide-title-box">
-                                                <p className="slide-title" title={slide.book.title}>
-                                                    {slide.book.title}
-                                                </p>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="missing-book">
-                                            Book data missing
+                                        <div className="admin-slide-overlay">
                                             <button
                                                 onClick={() => handleDelete(slide._id)}
-                                                className="missing-delete"
+                                                className="remove-slide-btn"
                                             >
-                                                <Trash2 size={12} />
+                                                <Trash2 size={16} /> Remove
                                             </button>
                                         </div>
-                                    )}
+
+                                        <div className="slide-title-box">
+                                            <p className="slide-title" title={slide.book.title}>
+                                                {slide.book.title}
+                                            </p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="missing-book p-4 text-red-500 text-center flex flex-col items-center justify-center h-full">
+                                        <span className="text-xs mb-2">Book data missing</span>
+                                        <button
+                                            onClick={() => handleDelete(slide._id)}
+                                            className="remove-slide-btn mt-0"
+                                        >
+                                            <Trash2 size={12} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div key={`placeholder-${index}`} className="admin-slide-placeholder">
+                                <div className="placeholder-icon">
+                                    <div className="w-12 h-16 border-2 border-dashed border-gray-600 rounded flex items-center justify-center">
+                                        <span className="text-2xl text-gray-600">+</span>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
+                                <span className="placeholder-text">Empty Slot {index + 1}</span>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

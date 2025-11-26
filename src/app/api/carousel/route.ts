@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
         await dbConnect();
 
         const count = await Carousel.countDocuments();
-        if (count >= 10) {
-            return NextResponse.json({ error: "Carousel is full (max 10 slides)" }, { status: 400 });
+        if (count >= 9) {
+            return NextResponse.json({ error: "Carousel is full (max 9 slides)" }, { status: 400 });
         }
 
         const existing = await Carousel.findOne({ book: bookId });

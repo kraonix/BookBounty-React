@@ -61,8 +61,12 @@ export const ManageBooks = () => {
     if (loading) return <div>Loading books...</div>;
 
     return (
-        <div className="admin-form-container">
-            <h2 className="section-header">Manage Books</h2>
+        <div className="content-panel" style={{ maxWidth: "100%" }}>
+            <div className="panel-header">
+                <h2 className="panel-title">Manage Books</h2>
+                <p className="panel-subtitle">View and manage all books in the library.</p>
+            </div>
+
             <div className="books-table-container">
                 <table className="books-table">
                     <thead>

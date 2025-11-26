@@ -4,8 +4,6 @@
     min-height: 100vh;
     width: 100%;
     display: flex;
-    padding-top: 80px;
-    /* Account for fixed navbar */
     color: #e5e7eb;
     font-family: var(--font-lato, sans-serif);
 }
@@ -15,8 +13,7 @@
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    height: calc(100vh - 80px);
-    /* Full height minus navbar */
+    min-height: 100vh;
 }
 
 /* Left Panel - Navigation */
@@ -73,7 +70,7 @@
     width: 75%;
     padding: 2rem;
     overflow-y: auto;
-    /* Internal scroll */
+    scrollbar-width: none;
     background-color: #141414;
 }
 
