@@ -16,6 +16,8 @@ export default function ProfilePage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<Tab>("personal");
 
+    const [mobileView, setMobileView] = useState<"menu" | "content">("menu");
+
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/login");
@@ -29,6 +31,15 @@ export default function ProfilePage() {
     if (status === "unauthenticated") {
         return null;
     }
+
+    const handleTabChange = (tab: Tab) => {
+        setActiveTab(tab);
+        setMobileView("content");
+    };
+
+    const handleBackToMenu = () => {
+        setMobileView("menu");
+    };
 
     const renderContent = () => {
         switch (activeTab) {
@@ -48,39 +59,42 @@ export default function ProfilePage() {
     return (
         <div className="profile-wrapper">
             <div className="profile-container">
-                {/* Left Panel - 25% */}
-                <aside className="profile-sidebar">
+                {/* Left Panel - Navigation */}
+                <aside className={`profile-sidebar ${mobileView === "content" ? "mobile-hidden" : ""}`}>
                     <h1 className="sidebar-title">Settings</h1>
                     <nav className="sidebar-nav">
                         <button
                             className={`nav-item ${activeTab === "personal" ? "active" : ""}`}
-                            onClick={() => setActiveTab("personal")}
+                            onClick={() => handleTabChange("personal")}
                         >
                             Personal Information
                         </button>
                         <button
                             className={`nav-item ${activeTab === "preferences" ? "active" : ""}`}
-                            onClick={() => setActiveTab("preferences")}
+                            onClick={() => handleTabChange("preferences")}
                         >
                             Preferences
                         </button>
                         <button
                             className={`nav-item ${activeTab === "saved" ? "active" : ""}`}
-                            onClick={() => setActiveTab("saved")}
+                            onClick={() => handleTabChange("saved")}
                         >
                             Saved Books
                         </button>
                         <button
                             className={`nav-item ${activeTab === "history" ? "active" : ""}`}
-                            onClick={() => setActiveTab("history")}
+                            onClick={() => handleTabChange("history")}
                         >
                             History
                         </button>
                     </nav>
                 </aside>
 
-                {/* Right Panel - 75% */}
-                <main className="profile-content">
+                {/* Right Panel - Content */}
+                <main className={`profile-content ${mobileView === "menu" ? "mobile-hidden" : ""}`}>
+                    <button className="mobile-back-btn" onClick={handleBackToMenu}>
+                        ← Back to Menu
+                    </button>
                     {renderContent()}
                 </main>
             </div>

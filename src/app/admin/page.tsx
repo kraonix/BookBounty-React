@@ -26,6 +26,7 @@ export default function AdminPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [activeView, setActiveView] = useState<AdminView>("add-books");
+    const [mobileView, setMobileView] = useState<"menu" | "content">("menu");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -42,6 +43,15 @@ export default function AdminPage() {
     if ((session?.user as any)?.role !== "admin") {
         return null;
     }
+
+    const handleViewChange = (view: AdminView) => {
+        setActiveView(view);
+        setMobileView("content");
+    };
+
+    const handleBackToMenu = () => {
+        setMobileView("menu");
+    };
 
     const renderContent = () => {
         switch (activeView) {
@@ -60,13 +70,13 @@ export default function AdminPage() {
         <div className="admin-wrapper">
             <div className="admin-container">
                 {/* Left Panel - Sidebar */}
-                <aside className="admin-sidebar">
+                <aside className={`admin-sidebar ${mobileView === "content" ? "mobile-hidden" : ""}`}>
                     <h1 className="sidebar-title">Admin Dashboard</h1>
 
                     <nav className="flex flex-col gap-2">
                         <button
                             className={`nav-btn ${activeView === "add-books" ? "active" : ""}`}
-                            onClick={() => setActiveView("add-books")}
+                            onClick={() => handleViewChange("add-books")}
                         >
                             <BookPlus size={20} />
                             Add Books
@@ -74,7 +84,7 @@ export default function AdminPage() {
 
                         <button
                             className={`nav-btn ${activeView === "manage-books" ? "active" : ""}`}
-                            onClick={() => setActiveView("manage-books")}
+                            onClick={() => handleViewChange("manage-books")}
                         >
                             <Library size={20} />
                             Manage Books
@@ -82,7 +92,7 @@ export default function AdminPage() {
 
                         <button
                             className={`nav-btn ${activeView === "manage-carousel" ? "active" : ""}`}
-                            onClick={() => setActiveView("manage-carousel")}
+                            onClick={() => handleViewChange("manage-carousel")}
                         >
                             <Images size={20} />
                             Manage Carousel
@@ -91,7 +101,10 @@ export default function AdminPage() {
                 </aside>
 
                 {/* Right Panel - Content Area */}
-                <main className="admin-content">
+                <main className={`admin-content ${mobileView === "menu" ? "mobile-hidden" : ""}`}>
+                    <button className="mobile-back-btn" onClick={handleBackToMenu}>
+                        ← Back to Menu
+                    </button>
                     {renderContent()}
                 </main>
             </div>
