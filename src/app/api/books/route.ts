@@ -4,7 +4,7 @@ import Book from "@/models/Book";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export const revalidate = 60; // Cache for 60 seconds
+export const revalidate = 3600; // Cache for 3600 seconds
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
             { books, total, page, totalPages: Math.ceil(total / limit) },
             {
                 headers: {
-                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+                    'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
                 },
             }
         );

@@ -11,7 +11,7 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Play, Star, ThumbsUp, ThumbsDown, Bookmark, EyeOff, Download } from "lucide-react";
@@ -32,15 +32,18 @@ interface Book {
     pdf: string;
 }
 
-export const BookDetails = () => {
+export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
     const { id } = useParams();
-    const [book, setBook] = useState<Book | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [book, setBook] = useState<Book | null>(initialBook || null);
+    const [loading, setLoading] = useState(!initialBook);
+
+    // Track if view has been counted to prevent double counting in StrictMode
+    const viewCounted = useRef(false);
 
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const res = await fetch(`/api/books/${id}`, { next: { revalidate: 60 } });
+                const res = await fetch(`/api/books/${id}`, { next: { revalidate: 3600 } });
                 const data = await res.json();
                 if (data._id) {
                     setBook(data);
@@ -51,8 +54,26 @@ export const BookDetails = () => {
                 setLoading(false);
             }
         };
-        if (id) fetchBook();
-    }, [id]);
+
+        const incrementView = async () => {
+            if (viewCounted.current) return;
+            try {
+                await fetch("/api/books/view", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ bookId: id }),
+                });
+                viewCounted.current = true;
+            } catch (error) {
+                console.error("Failed to increment view", error);
+            }
+        };
+
+        if (id) {
+            if (!book) fetchBook();
+            incrementView();
+        }
+    }, [id, book]);
 
     if (loading) return <div className="min-h-screen text-white flex items-center justify-center">Loading...</div>;
     if (!book) return <div className="min-h-screen text-white flex items-center justify-center">Book not found</div>;

@@ -128,7 +128,7 @@ export const BookSlider = ({ books }: BookSliderProps) => {
                                 id={book.id}
                                 title={book.title}
                                 image={book.image}
-                                author="Unknown" // Placeholder as BookSlider seems unused or legacy
+                                author="Unknown" //legacy
                             />
                         );
                     })}

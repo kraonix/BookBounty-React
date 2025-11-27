@@ -19,7 +19,11 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        return NextResponse.json(user, {
+            headers: {
+                'Cache-Control': 'private, max-age=3600, stale-while-revalidate=600',
+            },
+        });
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch user profile" }, { status: 500 });
     }

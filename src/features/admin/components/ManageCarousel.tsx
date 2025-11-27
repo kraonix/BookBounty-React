@@ -34,13 +34,45 @@ export const ManageCarousel = () => {
     const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
-        const resSlides = await fetch("/api/carousel", { next: { revalidate: 60 } });
-        const dataSlides = await resSlides.json();
-        if (Array.isArray(dataSlides)) setSlides(dataSlides);
+        const CACHE_KEY = "carousel_cache";
+        const VERSION_KEY = "carousel_version";
 
-        const resBooks = await fetch("/api/books?limit=100", { next: { revalidate: 60 } });
-        const dataBooks = await resBooks.json();
-        if (dataBooks.books) setBooks(dataBooks.books);
+        // 1. Fetch Carousel Slides with Smart Caching
+        try {
+            // Check for updates from server
+            const checkRes = await fetch("/api/carousel/check");
+            const { lastModified } = await checkRes.json();
+
+            // Check local cache
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            const cachedVersion = localStorage.getItem(VERSION_KEY);
+
+            // If cache exists and matches server version, use it
+            if (cachedData && cachedVersion === lastModified) {
+                setSlides(JSON.parse(cachedData));
+            } else {
+                // Otherwise fetch fresh data
+                const resSlides = await fetch("/api/carousel", { next: { revalidate: 60 } });
+                const dataSlides = await resSlides.json();
+                if (Array.isArray(dataSlides)) {
+                    setSlides(dataSlides);
+                    // Update cache
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(dataSlides));
+                    localStorage.setItem(VERSION_KEY, lastModified);
+                }
+            }
+        } catch (error) {
+            console.error("Failed to fetch slides", error);
+        }
+
+        // 2. Fetch Books (Standard Fetch)
+        try {
+            const resBooks = await fetch("/api/books?limit=100", { next: { revalidate: 60 } });
+            const dataBooks = await resBooks.json();
+            if (dataBooks.books) setBooks(dataBooks.books);
+        } catch (error) {
+            console.error("Failed to fetch books", error);
+        }
     };
 
     useEffect(() => {
@@ -62,6 +94,9 @@ export const ManageCarousel = () => {
 
             if (res.ok) {
                 setSelectedBookId("");
+                // Invalidate cache and refresh
+                localStorage.removeItem("carousel_cache");
+                localStorage.removeItem("carousel_version");
                 fetchData();
             } else {
                 const err = await res.json();
@@ -78,7 +113,10 @@ export const ManageCarousel = () => {
         const res = await fetch(`/api/carousel?id=${id}`, { method: "DELETE" });
 
         if (res.ok) {
-            setSlides(prev => prev.filter(s => s._id !== id));
+            // Invalidate cache and refresh
+            localStorage.removeItem("carousel_cache");
+            localStorage.removeItem("carousel_version");
+            fetchData();
         }
     };
 

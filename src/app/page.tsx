@@ -23,6 +23,7 @@ export default function Home() {
         <BookSection title="Non-Fictions" genre="Non-Fiction" />
         <BookSection title="Fantasy" genre="Fantasy" />
         <BookSection title="Sci-Fi" genre="Sci-Fi" />
+        <BookSection title="Mystery" genre="Mystery" />
         <BookSection title="Horror" genre="Horror" />
       </div>
     </div>

@@ -5,7 +5,7 @@ import Book from "@/models/Book"; // Ensure Book model is registered
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export const revalidate = 60; // Cache for 60 seconds
+export const revalidate = 3600; // Cache for 3600 seconds
 
 export async function GET(req: NextRequest) {
     try {
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(slides, {
             headers: {
-                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
             },
         });
     } catch (error) {

@@ -24,16 +24,44 @@ export const HeroCarousel = () => {
 
     useEffect(() => {
         const fetchSlides = async () => {
+            const CACHE_KEY = "carousel_cache";
+            const VERSION_KEY = "carousel_version";
+
             try {
-                const res = await fetch("/api/carousel", { next: { revalidate: 60 } });
+                // 1. Check for updates from server (lightweight call)
+                const checkRes = await fetch("/api/carousel/check");
+                const { lastModified } = await checkRes.json();
+
+                // 2. Check local cache
+                const cachedData = localStorage.getItem(CACHE_KEY);
+                const cachedVersion = localStorage.getItem(VERSION_KEY);
+
+                // 3. If cache exists and matches server version, use it
+                if (cachedData && cachedVersion === lastModified) {
+                    setSlides(JSON.parse(cachedData));
+                    setLoading(false);
+                    return;
+                }
+
+                // 4. Otherwise, fetch fresh data
+                const res = await fetch("/api/carousel", { next: { revalidate: 3600 } });
                 if (res.ok) {
                     const data = await res.json();
                     // Filter out any slides where book might be null (deleted book)
                     const validSlides = data.filter((item: any) => item.book);
                     setSlides(validSlides);
+
+                    // Update cache and version
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(validSlides));
+                    localStorage.setItem(VERSION_KEY, lastModified);
                 }
             } catch (error) {
                 console.error("Failed to fetch carousel slides", error);
+                // Fallback to cache if network fails
+                const cachedData = localStorage.getItem(CACHE_KEY);
+                if (cachedData) {
+                    setSlides(JSON.parse(cachedData));
+                }
             } finally {
                 setLoading(false);
             }

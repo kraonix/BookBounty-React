@@ -142,6 +142,7 @@ export const AddBookForm = () => {
                                     <option value="Fiction">Fiction</option>
                                     <option value="Non-Fiction">Non-Fiction</option>
                                     <option value="Manga">Manga</option>
+                                    <option value="Mystery">Mystery</option>
                                     <option value="Horror">Horror</option>
                                     <option value="Sci-Fi">Sci-Fi</option>
                                     <option value="Fantasy">Fantasy</option>
