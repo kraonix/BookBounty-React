@@ -52,16 +52,19 @@ const BookSchema = new mongoose.Schema({
         required: [true, "Please provide the book PDF."],
     },
     likes: {
-        type: Number,
-        default: 0,
-    },
-    views: {
-        type: Number,
-        default: 0,
+        type: [String], // Array of User IDs
+        default: [],
     },
     dislikes: {
-        type: Number,
-        default: 0,
+        type: [String], // Array of User IDs
+        default: [],
+    },
+    ratings: {
+        type: [{
+            user: String, // User ID
+            score: Number, // 1-5
+        }],
+        default: [],
     },
     saved: {
         type: Number,
