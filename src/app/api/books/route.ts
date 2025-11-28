@@ -16,7 +16,15 @@ export async function GET(req: NextRequest) {
     try {
         await dbConnect();
         const query: any = {};
-        if (genre) {
+        const search = searchParams.get("search");
+
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { author: { $regex: search, $options: "i" } },
+                { genre: { $regex: search, $options: "i" } }
+            ];
+        } else if (genre) {
             query.genre = genre;
         }
 

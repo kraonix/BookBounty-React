@@ -1,33 +1,57 @@
-/**
- * Navbar Component
- * 
- * The top navigation bar for the application.
- * 
- * Features:
- * - Logo and branding.
- * - Navigation links (Home, Categories, etc.).
- * - User authentication status (Login/Signup vs Profile).
- * - Admin link (visible only to admins).
- * - Sticky positioning with scroll effect.
- */
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { Search, User, LogOut, Heart, Settings, ArrowLeft, Info, Phone } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import "@/features/navbar/navbar.css";
 
 export const Navbar = () => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchQuery.length >= 4) {
+        setIsSearching(true);
+        try {
+          const res = await fetch(`/api/books?search=${searchQuery}&limit=3`);
+          const data = await res.json();
+          setSearchResults(data.books || []);
+          setShowResults(true);
+        } catch (error) {
+          console.error("Search failed", error);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSearchResults([]);
+        setShowResults(false);
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setShowResults(false);
+      setIsMobileSearchOpen(false);
+    }
+  };
 
   return (
     <>
       <nav className={`navbar ${isMobileSearchOpen ? "mobile-search-active" : ""}`}>
         <div className="navbar-container">
-          {/* Logo */}
           {/* Logo */}
           <Link href="/" className={`navbar-logo ${isMobileSearchOpen ? "hidden-mobile" : ""}`}>
             <Image
@@ -54,10 +78,64 @@ export const Navbar = () => {
                 type="text"
                 placeholder="Search Book..."
                 className="search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+                onFocus={() => {
+                  if (searchResults.length > 0) setShowResults(true);
+                }}
               />
-              <button className="search-btn">
+              <button className="search-btn" onClick={handleSearch}>
                 <Search size={18} />
               </button>
+
+              {/* Search Results Popup */}
+              {showResults && searchQuery.length >= 4 && (
+                <div className="search-popup">
+                  {isSearching ? (
+                    <div className="p-4 text-gray-400 text-sm">Searching...</div>
+                  ) : searchResults.length > 0 ? (
+                    <>
+                      {searchResults.map((book) => (
+                        <Link
+                          key={book._id}
+                          href={`/book/${book._id}`}
+                          className="search-result-item"
+                          onClick={() => setShowResults(false)}
+                        >
+                          <div className="search-result-img-wrapper">
+                            <Image
+                              src={book.thumbnail}
+                              alt={book.title}
+                              width={40}
+                              height={60}
+                              className="search-result-img"
+                              unoptimized
+                            />
+                          </div>
+                          <div className="search-result-info">
+                            <span className="search-result-title">{book.title}</span>
+                            <span className="search-result-author">{book.author}</span>
+                          </div>
+                        </Link>
+                      ))}
+                      <Link
+                        href={`/search?q=${searchQuery}`}
+                        className="search-see-all-btn"
+                        onClick={() => setShowResults(false)}
+                      >
+                        See All Results
+                      </Link>
+                    </>
+                  ) : (
+                    <div className="p-4 text-gray-400 text-sm">No results found</div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

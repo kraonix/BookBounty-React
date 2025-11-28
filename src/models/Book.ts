@@ -70,6 +70,10 @@ const BookSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    views: {
+        type: Number,
+        default: 0,
+    },
 }, { timestamps: true });
 
 export default mongoose.models.Book || mongoose.model("Book", BookSchema);
