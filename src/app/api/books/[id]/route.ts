@@ -17,15 +17,44 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             return NextResponse.json({ error: "Book not found" }, { status: 404 });
         }
 
-        // View increment is now handled by a separate POST request to /api/books/view
-        // to allow caching of this GET request without losing view counts.
+        const session = await getServerSession(authOptions);
+        let isLiked = false;
+        let isDisliked = false;
+        let userRating = null;
 
-        return NextResponse.json(book, {
+        if (session && session.user) {
+            const userId = (session.user as any).id || session.user.email;
+            isLiked = book.likes.includes(userId);
+            isDisliked = book.dislikes.includes(userId);
+            const ratingObj = book.ratings.find((r: any) => r.user === userId);
+            if (ratingObj) {
+                userRating = ratingObj.score;
+            }
+        }
+
+        const totalRatings = book.ratings.length;
+        const averageRating = totalRatings > 0
+            ? (book.ratings.reduce((acc: number, curr: any) => acc + curr.score, 0) / totalRatings).toFixed(1)
+            : 0;
+
+        const bookData = {
+            ...book.toObject(),
+            likes: book.likes.length,
+            dislikes: book.dislikes.length,
+            isLiked,
+            isDisliked,
+            userRating,
+            averageRating: Number(averageRating),
+            totalRatings
+        };
+
+        return NextResponse.json(bookData, {
             headers: {
                 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
             },
         });
     } catch (error) {
+        console.error("Error fetching book:", error);
         return NextResponse.json({ error: "Failed to fetch book" }, { status: 500 });
     }
 }

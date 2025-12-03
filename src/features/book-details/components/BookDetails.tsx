@@ -11,12 +11,11 @@
  */
 "use client";
 
-
-
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
-import { Play, Star, ThumbsUp, ThumbsDown, Bookmark, EyeOff, Download } from "lucide-react";
+import { Play, Star, ThumbsUp, ThumbsDown, Bookmark, EyeOff } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Toast } from "@/components/ui/Toast";
 import { LoginModal } from "@/components/ui/LoginModal";
@@ -42,6 +41,10 @@ interface Book {
     totalRatings?: number;
 }
 
+// Client-side cache
+const bookCache = new Map<string, { data: Book, timestamp: number }>();
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+
 export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
     const { id } = useParams();
     const { data: session } = useSession();
@@ -56,11 +59,25 @@ export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
 
     useEffect(() => {
         const fetchBook = async () => {
+            // Check cache first
+            if (typeof id === 'string') {
+                const cached = bookCache.get(id);
+                if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+                    setBook(cached.data);
+                    setLoading(false);
+                    return;
+                }
+            }
+
             try {
                 const res = await fetch(`/api/books/${id}`, { next: { revalidate: 3600 } });
                 const data = await res.json();
                 if (data._id) {
                     setBook(data);
+                    // Update cache
+                    if (typeof id === 'string') {
+                        bookCache.set(id, { data, timestamp: Date.now() });
+                    }
                 }
             } catch (error) {
                 console.error("Failed to fetch book", error);
@@ -220,7 +237,12 @@ export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
         }
     };
 
-    if (loading) return <div className="min-h-screen text-white flex items-center justify-center">Loading...</div>;
+    if (loading) return (
+        <div className="book-loading-container">
+            <div className="loader-circle"></div>
+            <div className="loading-text">Loading your book...</div>
+        </div>
+    );
     if (!book) return <div className="min-h-screen text-white flex items-center justify-center">Book not found</div>;
 
     return (
@@ -247,28 +269,16 @@ export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
                             unoptimized
                         />
                     </div>
-
-                    <div className="action-buttons w-full" style={{ marginTop: '1rem' }}>
-                        <a
-                            href={book.pdf}
-                            download={`${book.title}.pdf`}
-                            className="action-btn"
-                            style={{ justifyContent: 'center', width: '100%' }}
-                        >
-                            <Download size={20} />
-                            Download PDF
-                        </a>
-                    </div>
                 </div>
 
                 {/* Middle Column - 60% */}
                 <div className="details-middle">
                     <h1 className="book-title-large">{book.title}</h1>
 
-                    <a href={book.pdf} target="_blank" rel="noopener noreferrer" className="read-now-btn no-underline">
+                    <Link href={`/reader/${book._id}`} className="read-now-btn no-underline">
                         <Play fill="black" size={20} />
                         Read Now
-                    </a>
+                    </Link>
 
                     <div className="description-box">
                         <p className="description-text">
@@ -332,8 +342,14 @@ export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
                         </div>
 
                         <span className="rating-value">
-                            {book.averageRating || 0}/5
-                            <span className="text-xs text-gray-400 ml-2">({book.totalRatings || 0} votes)</span>
+                            {book.userRating ? (
+                                <span className="text-[#cae962]">You rated: {book.userRating}/5</span>
+                            ) : (
+                                <>
+                                    {book.averageRating || 0}/5
+                                    <span className="text-xs text-gray-400 ml-2">({book.totalRatings || 0} votes)</span>
+                                </>
+                            )}
                         </span>
                     </div>
                 </div>
@@ -379,7 +395,7 @@ export const BookDetails = ({ initialBook }: { initialBook?: Book | null }) => {
 
                     <div className="action-buttons">
                         <button
-                            className={`action-btn ${book.isLiked ? 'bg-[#cae962] text-black border-[#cae962]' : ''}`}
+                            className={`action-btn ${book.isLiked ? 'active' : ''}`}
                             onClick={() => handleInteraction("like")}
                         >
                             <ThumbsUp size={18} fill={book.isLiked ? "black" : "none"} />
